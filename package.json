@@ -2,10 +2,10 @@
   "name": "feat",
   "version": "1.0.0",
   "description": "Creates seamless Spotify playlists based on artist features",
-  "main": "app.js",
+  "main": "src/api/api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel-node app.js"
+    "start": "babel-node src/api/api.js"
   },
   "author": "Harry Gallagher",
   "license": "ISC",
