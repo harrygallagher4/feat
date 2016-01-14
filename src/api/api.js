@@ -1,9 +1,15 @@
 import express from 'express'
+import gracefulExit from 'express-graceful-exit'
+
 import SpotifyAuth from './SpotifyAuth'
+
+console.log('STARTING')
 
 const app = express()
 
-app.use(express.static('src/dist'))
+app.use(gracefulExit.middleware(app))
+app.use(express.static('build/'))
+
 
 app.get('/hello', (req, res) => {
   res.send('Hello, world!')
@@ -11,4 +17,4 @@ app.get('/hello', (req, res) => {
 
 SpotifyAuth(app)
 
-app.listen(8080, () => {})
+export default app

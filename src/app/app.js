@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Q from 'q'
 
 import Spotify from './lib/spotify'
-import config from './config'
+import config from '../api/config'
 
 function log(o) {
   console.log(JSON.stringify(o, null, 1))
