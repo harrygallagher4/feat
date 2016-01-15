@@ -4,6 +4,7 @@ import buffer from 'vinyl-buffer'
 import del from 'del'
 import gulp from 'gulp'
 import path from 'path'
+import rename from 'gulp-rename'
 import source from 'vinyl-source-stream'
 import supervisor from 'gulp-supervisor'
 
@@ -24,6 +25,7 @@ gulp.task('build', ['copy'], () => {
   return b.bundle()
   .pipe(source(appMain))
   .pipe(buffer())
+  .pipe(rename({dirname: ''}))
   .pipe(gulp.dest(appTarget))
 })
 
@@ -36,16 +38,23 @@ gulp.task('copy', ['clean'], () => {
 })
 
 gulp.task('clean', () => {
+  let appTarget = path.join(build, appDest)
   return del([
-    `${build}/**/*`    
+    `${build}/**/*`,
+    `!${appTarget}`
   ]) 
 })
 
-gulp.task('watch:app', () => {
-  return gulp.watch(app, ['build'])
+gulp.task('watch:app', ['build'], () => {
+  return gulp.watch(path.join(src, app), ['build'])
 })
 
-gulp.task('watch', ['watch:app'])
+gulp.task('watch:public', ['copy'], () => {
+  let publicGlob = `${path.join(src, 'public')}/**/*`
+  return gulp.watch(publicGlob, ['copy'])
+})
+
+gulp.task('watch', ['watch:app', 'watch:public'])
 
 gulp.task('server', () => {
   supervisor('app', {
@@ -53,4 +62,4 @@ gulp.task('server', () => {
   })
 })
 
-gulp.task('default', ['build'])
+gulp.task('default', ['server', 'watch'])

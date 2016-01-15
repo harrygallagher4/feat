@@ -20,6 +20,7 @@
     "express-graceful-exit": "^0.1.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-supervisor": "^0.1.2",
     "gulp-uglify": "^1.5.1",
