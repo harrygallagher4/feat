@@ -10,7 +10,7 @@ import supervisor from 'gulp-supervisor'
 
 const src = './src'
 const build = './build'
-const app = 'app/app.js'
+const app = 'app/app.jsx'
 const appDest = 'js/'
 
 gulp.task('build', ['copy'], () => {
@@ -25,7 +25,10 @@ gulp.task('build', ['copy'], () => {
   return b.bundle()
   .pipe(source(appMain))
   .pipe(buffer())
-  .pipe(rename({dirname: ''}))
+  .pipe(rename({
+    dirname: '',
+    extname: '.js'
+  }))
   .pipe(gulp.dest(appTarget))
 })
 
@@ -39,10 +42,12 @@ gulp.task('copy', ['clean'], () => {
 
 gulp.task('clean', () => {
   let appTarget = path.join(build, appDest)
+  console.log(appTarget)
   return del([
-    `${build}/**/*`,
-    `!${appTarget}`
-  ]) 
+    `build/**/*`,
+    `!build/js`,
+    `!build/js/app.js`
+  ])
 })
 
 gulp.task('watch:app', ['build'], () => {

@@ -1,18 +1,15 @@
 import _ from 'lodash'
 import Q from 'q'
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 
 import Spotify from './lib/spotify'
-import config from '../api/config'
 
 function log(o) {
-  console.log(JSON.stringify(o, null, 1))
+  console.log(o)
 }
 
-const spotify_client_id = config.spotify.client_id
-const spotify_access_token = config.spotify.token.access_token
-
-let spot = new Spotify(spotify_client_id, spotify_access_token, 'US')
-
+/*
 function getArtistNode(artist) {
   let name, features
 
@@ -50,4 +47,21 @@ Q.allSettled(nodes)
   log(nodes)
 })
 .done()
+*/
 
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <h1>Feat</h1>
+      </div>
+    )
+  }
+}
+
+window.addEventListener('load', () => {
+  ReactDOM.render(<App />, document.getElementById('app'))
+})
+
+
+console.log('test!')

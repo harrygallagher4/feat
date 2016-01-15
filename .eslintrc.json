@@ -15,16 +15,19 @@
         "semi": [
             2,
             "never"
-        ],
-        "no-console": 0,
-        "no-unused-vars": 1
+        ]
     },
     "env": {
         "es6": true,
-        "node": true
+        "node": true,
+        "browser": true
     },
+    "extends": "eslint:recommended",
     "ecmaFeatures": {
-        "modules": true
+        "jsx": true,
+        "experimentalObjectRestSpread": true
     },
-    "extends": "eslint:recommended"
+    "plugins": [
+        "react"
+    ]
 }
