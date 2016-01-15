@@ -3,8 +3,6 @@ import gracefulExit from 'express-graceful-exit'
 
 import SpotifyAuth from './SpotifyAuth'
 
-console.log('STARTING')
-
 const app = express()
 
 app.use(gracefulExit.middleware(app))
