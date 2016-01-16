@@ -1,5 +1,8 @@
-/* 
- * This entire project uses ES2015 syntax. 
- * Run with `babel-node app` or `npm start`
- */
-console.log('TODO')
+require('babel-polyfill')
+require('babel-register')({
+  only: /src\//
+})
+var app = require('./src/api/api').default
+var config = require('./src/api/config')
+
+app.listen(config.port)
