@@ -6,11 +6,10 @@ const POST = 'POST'
 
 class Spotify {
 
-  constructor(client_id, access_token, country) {
+  constructor(access_token, country) {
     this.responses = []
     this.url = 'https://api.spotify.com/v1'
 
-    this.client_id = client_id
     this.access_token = access_token
     this.country = country
 
