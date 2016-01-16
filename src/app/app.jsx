@@ -196,49 +196,49 @@ const App = React.createClass({
           enabled: false,
           container: ReactDOM.findDOMNode(this.refs.config)
         },
-        "nodes": {
-          "shape": "circle",
-          "color": {
-            "border": COLORS.primaryColorDark,
-            "background": COLORS.primaryColor,
-            "highlight": {
-              "border": COLORS.primaryColor,
-              "background": COLORS.primaryColorLight
+        nodes: {
+          shape: 'circle',
+          color: {
+            border: COLORS.primaryColorDark,
+            background: COLORS.primaryColor,
+            highlight: {
+              border: COLORS.primaryColor,
+              background: COLORS.primaryColorLight
             },
-            "hover": {
-              "border": COLORS.primaryColor,
-              "background": COLORS.primaryColorLight
+            hover: {
+              border: COLORS.primaryColor,
+              background: COLORS.primaryColorLight
             }
           },
-          "font": {
-            "color": 'white',
-            "face": 'Helvetica'
+          font: {
+            color: 'white',
+            face: 'Helvetica'
           },
-          "shapeProperties": {
-            "borderRadius": 2
+          shapeProperties: {
+            borderRadius: 2
           }
         },
-        "edges": {
-          "arrows": {
-            "from": {
-              "enabled": true
+        edges: {
+          arrows: {
+            from: {
+              enabled: true
             }
           }
         },
-        "interaction": {
-          "hover": true
+        interaction: {
+          hover: true
         },
-        "physics": {
-          "forceAtlas2Based": {
-            "gravitationalConstant": -420,
-            "centralGravity": 0.295,
-            "springLength": 115,
-            "springConstant": 0,
-            "damping": 1
+        physics: {
+          forceAtlas2Based: {
+            gravitationalConstant: -420,
+            centralGravity: 0.295,
+            springLength: 115,
+            springConstant: 0,
+            damping: 1
           },
-          "solver": "forceAtlas2Based",
-          "timestep": 0.5,
-          "minVelocity": 0.01
+          solver: 'forceAtlas2Based',
+          timestep: 0.5,
+          minVelocity: 0.01
         }
       }
       let network = new vis.Network(container, data, options)
