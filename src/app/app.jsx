@@ -21,57 +21,36 @@ const COLORS = {
 
 const test_artists = 'action bronson, yelawolf, asap ferg, asap rocky, danny brown, joey badass, schoolboy q, juicy j, lil wayne, future, kendrick lamar, 2 chainz, drake, jay rock, bj the chicago kid, tyler the creator, ab soul, black hippy'
 
-window.query = querystring.parse(window.location.search.substring(1))
+window.query = querystring.parse(window.location.hash.substring(1))
+window.location.hash = ''
 let spotifyReady = false
 let spotify
-let accessToken = window.query.access_token
-if(accessToken) {
-  spotify = new Spotify(accessToken, 'US')
-}
 
-function log(o) {
-  console.log(o)
-}
+/* Access token handling */
+/* ===================== */
+let accessToken = window.query.access_token || localStorage.spotifyAccessToken
 
-/*
-function getArtistNode(artist) {
-  let name, features
-
-  return spot.searchArtist(artist)
-  .then(artists => {
-    let artist = artists.artists.items[0]
-    name = artist.name
-    return artist.id
-  })
-  .then(id => spot.getArtistAlbums(id))
-  .then(albums => _.pluck(albums.items, 'id'))
-  .then(ids => spot.getAlbums(ids))
-  .then(albums => {
-    features = _(albums.albums)
-    .pluck('tracks.items')
-    .flatten()
-    .pluck('artists')
-    .flatten()
-    .pluck('name')
-    .uniq()
-    .without(name)
-    .value()
-
-    return {
-      name, features
+if (accessToken) {
+  if (!localStorage.spotifyAccessToken) {
+    console.log('now:', Date.now())
+    console.log('spotify expires at:', window.query.expires_in)
+    localStorage.spotifyAccessToken = window.query.access_token
+    localStorage.spotifyExpiresAt = ((Date.now() - 15000) + (window.query.expires_in * 1000))
+    localStorage.spotifyRefreshToken = window.query.refresh_token
+    localStorage.spotifyTokenType = window.query.token_type
+  } else {
+    if (localStorage.spotifyExpiresAt - Date.now() <= 0) {
+      ['AccessToken', 'ExpiresAt', 'RefreshToken', 'TokenType']
+      .forEach(key => localStorage.removeItem(`spotify${key}`))
+      accessToken = undefined
     }
-  })
-}
+  }
 
-let seeds = ['asap rocky', 'schoolboy q', 'kendrick lamar', 'drake',
-'2 chainz', 'danny brown', 'action bronson', 'asap ferg']
-let nodes = Q.all(seeds.map(getArtistNode))
-Q.allSettled(nodes)
-.then(nodes => {
-  log(nodes)
-})
-.done()
-*/
+  if (accessToken)
+    spotify = new Spotify(accessToken, 'US')
+}
+/* ========================= */
+/* End access token handling */
 
 const App = React.createClass({
   componentDidMount() {
@@ -87,7 +66,7 @@ const App = React.createClass({
   },
 
   getInitialState() {
-    let accessToken = window.query.access_token
+    let accessToken = localStorage.spotifyAccessToken
     return {
       authenticated: !!accessToken,
       accessToken,
@@ -258,14 +237,14 @@ const App = React.createClass({
               <Input
                 type='text'
                 label='Spotify Username'
-                defaultValue={this.state.username}
+                value={this.state.username}
                 disabled
               />
               <Button href='/auth' block bsStyle='success' disabled={this.state.authenticated}>Link Spotify</Button>
               <Input
                 type='text'
                 label='Artists'
-                value={test_artists}
+                defaultValue={test_artists}
                 placeholder='A$AP Rocky, Drake, ScHoolBoy Q, ...'
                 ref='artists'
               />

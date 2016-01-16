@@ -41,7 +41,7 @@ function callback(req, res) {
       console.log(error)
       console.log(body)
     } else {
-      res.redirect(`/?${querystring.encode(body)}`)
+      res.redirect(`/#${querystring.encode(body)}`)
     }
   })
 }
