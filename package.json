@@ -8,7 +8,7 @@
     "start": "supervisor -w src/api app"
   },
   "author": "Harry Gallagher",
-  "license": "ISC",
+  "license": "wtfpl",
   "dependencies": {
     "babel-core": "^6.3.15",
     "babel-polyfill": "^6.3.14",
