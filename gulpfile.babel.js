@@ -42,7 +42,6 @@ gulp.task('copy', ['clean'], () => {
 
 gulp.task('clean', () => {
   let appTarget = path.join(build, appDest)
-  console.log(appTarget)
   return del([
     `build/**/*`,
     `!build/js`,
