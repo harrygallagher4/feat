@@ -282,5 +282,3 @@ window.addEventListener('load', () => {
   ReactDOM.render(<App spotify={spotify} />, document.getElementById('app'))
 })
 
-
-console.log('test!')
