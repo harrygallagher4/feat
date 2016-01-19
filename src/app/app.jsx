@@ -19,7 +19,7 @@ const COLORS = {
   dividerColor:       '#B6B6B6'
 }
 
-const test_artists = 'action bronson, yelawolf, asap ferg, asap rocky, danny brown, joey badass, schoolboy q, juicy j, lil wayne, future, kendrick lamar, 2 chainz, drake, jay rock, bj the chicago kid, tyler the creator, ab soul, black hippy'
+const test_artists = 'action bronson, yelawolf, asap ferg, asap rocky, danny brown, joey badass, schoolboy q, juicy j, lil wayne, future, kendrick lamar, 2 chainz, drake, jay rock, bj the chicago kid, tyler the creator, ab soul, black hippy, snoop dogg, dr dre, jay z, kanye west, pusha t'
 
 window.query = querystring.parse(window.location.hash.substring(1))
 window.location.hash = ''
@@ -32,8 +32,6 @@ let accessToken = window.query.access_token || localStorage.spotifyAccessToken
 
 if (accessToken) {
   if (!localStorage.spotifyAccessToken) {
-    console.log('now:', Date.now())
-    console.log('spotify expires at:', window.query.expires_in)
     localStorage.spotifyAccessToken = window.query.access_token
     localStorage.spotifyExpiresAt = ((Date.now() - 15000) + (window.query.expires_in * 1000))
     localStorage.spotifyRefreshToken = window.query.refresh_token
@@ -154,7 +152,7 @@ const App = React.createClass({
             to: _(artistNodes)
             .find({label:feature})
             .id,
-            arrows: 'from',
+            dashes: true,
             color: COLORS.primaryColorLight
           }
         })
@@ -163,8 +161,24 @@ const App = React.createClass({
       .flatten()
       .value()
 
+      let cleanedEdges = []
+      edges.forEach(edge => {
+        let { to, from } = edge
+        let sibling = _.find(edges, {to:from, from:to})
+        if (sibling) {
+          if (!(_.find(cleanedEdges, {to:from, from:to}) || _.find(cleanedEdges, {to, from})))
+            cleanedEdges.push({
+              to, from,
+              dashes: false,
+              color: COLORS.primaryColorLight
+            })
+        } else {
+          cleanedEdges.push(edge)
+        }
+      })
+
       let visNodes = new vis.DataSet(artistNodes)
-      let visEdges = new vis.DataSet(edges)
+      let visEdges = new vis.DataSet(cleanedEdges)
       let container = ReactDOM.findDOMNode(this.refs.network)
       let data = {
         nodes: visNodes,
@@ -172,6 +186,15 @@ const App = React.createClass({
       }
       let options = {
         configure: {
+          filter: function (option, path) {
+            if (path.indexOf('physics') !== -1) {
+              return true;
+            }
+            if (path.indexOf('smooth') !== -1 || option === 'smooth') {
+              return true;
+            }
+            return false;
+          },
           enabled: false,
           container: ReactDOM.findDOMNode(this.refs.config)
         },
@@ -198,24 +221,34 @@ const App = React.createClass({
           }
         },
         edges: {
-          arrows: {
-            from: {
-              enabled: true
-            }
-          }
+          smooth: {
+            type: 'continuous',
+            forceDirection: 'none'
+          },
+          hoverWidth: 2,
+          selectionWidth: 2
         },
         interaction: {
-          hover: true
+          hover: false
         },
         physics: {
-          forceAtlas2Based: {
-            gravitationalConstant: -420,
-            centralGravity: 0.295,
-            springLength: 115,
+          repulsion: {
+            centralGravity: 0.25,
+            springLength: 0,
             springConstant: 0,
-            damping: 1
+            nodeDistance: 80,
+            damping: 0.09
           },
-          solver: 'forceAtlas2Based',
+          barnesHut: {
+            gravitationalConstant: -11150,
+            centralGravity: 4.1,
+            springLength: 500,
+            springConstant: 0.03,
+            damping: 0.5,
+            avoidOverlap: 0.2
+          },
+          stabilization: false,
+          solver: 'repulsion',
           timestep: 0.5,
           minVelocity: 0.01
         }
@@ -248,7 +281,11 @@ const App = React.createClass({
                 placeholder='A$AP Rocky, Drake, ScHoolBoy Q, ...'
                 ref='artists'
               />
-              <Button block onClick={this.build}>Build Web</Button>
+              <Button
+                block
+                onClick={this.build}
+                disabled={!this.state.authenticated}
+                >Build Web</Button>
             </form>
           </Col>
         </Row>
